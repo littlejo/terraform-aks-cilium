@@ -4,12 +4,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 3.77.0 |
+| <a name="requirement_local"></a> [local](#requirement\_local) | 2.4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.77.0 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.4.0 |
 
 ## Modules
 
@@ -23,6 +25,7 @@ No modules.
 | [azurerm_subnet.node](https://registry.terraform.io/providers/hashicorp/azurerm/3.77.0/docs/resources/subnet) | resource |
 | [azurerm_subnet.pod](https://registry.terraform.io/providers/hashicorp/azurerm/3.77.0/docs/resources/subnet) | resource |
 | [azurerm_virtual_network.this](https://registry.terraform.io/providers/hashicorp/azurerm/3.77.0/docs/resources/virtual_network) | resource |
+| [local_file.this](https://registry.terraform.io/providers/hashicorp/local/2.4.0/docs/resources/file) | resource |
 
 ## Inputs
 
