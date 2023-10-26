@@ -57,3 +57,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   location            = var.location
   resource_group_name = var.resource_group_name
 }
+
+resource "local_file" "this" {
+  content  = azurerm_kubernetes_cluster.this.kube_config_raw
+  filename = "${path.module}/kubeconfig"
+}
