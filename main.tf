@@ -31,15 +31,15 @@ resource "azurerm_subnet" "pod" {
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
-  name               = "cilium-cluster-tf"
-  kubernetes_version = "1.27"
+  name               = var.aks.name
+  kubernetes_version = var.aks.version
 
-  dns_prefix = "cilium"
+  dns_prefix = var.aks.dns_prefix
 
   default_node_pool {
-    name           = "default"
-    node_count     = 3
-    vm_size        = "Standard_DS2_v2"
+    name           = var.aks.default_node_pool.name
+    node_count     = var.aks.default_node_pool.node_count
+    vm_size        = var.aks.default_node_pool.vm_size
     vnet_subnet_id = azurerm_subnet.node.id
     pod_subnet_id  = azurerm_subnet.pod.id
   }

@@ -31,6 +31,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_aks"></a> [aks](#input\_aks) | Feature of aks | `any` | <pre>{<br>  "default_node_pool": {<br>    "name": "default",<br>    "node_count": 3,<br>    "vm_size": "Standard_DS2_v2"<br>  },<br>  "dns_prefix": "cilium",<br>  "name": "cilium-cluster-tf",<br>  "version": "1.27"<br>}</pre> | no |
 | <a name="input_location"></a> [location](#input\_location) | Location (az group list \| jq -r .[0].location) | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Resource Group Name (az group list \| jq -r .[0].name) | `string` | n/a | yes |
 | <a name="input_subnet_node"></a> [subnet\_node](#input\_subnet\_node) | Feature of subnet of node | `any` | <pre>{<br>  "address_prefixes": [<br>    "10.240.0.0/16"<br>  ],<br>  "name": "nodesubnet"<br>}</pre> | no |

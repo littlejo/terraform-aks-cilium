@@ -34,3 +34,18 @@ variable "subnet_pod" {
     name             = "podsubnet"
   }
 }
+
+variable "aks" {
+  description = "Feature of aks"
+  type        = any
+  default = {
+    name       = "cilium-cluster-tf"
+    version    = "1.27"
+    dns_prefix = "cilium"
+    default_node_pool = {
+      name       = "default"
+      node_count = 3
+      vm_size    = "Standard_DS2_v2"
+    }
+  }
+}
