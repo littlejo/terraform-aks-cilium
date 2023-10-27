@@ -54,9 +54,9 @@ variable "cilium" {
   description = "Feature of cilium"
   type        = any
   default = {
-    type             = "cilium_custom" #other option: cilium_azure
-    version          = "1.14.3"
-    kube-proxy       = "disabled"
-    ebpf-hostrouting = "enabled"
+    type                   = "cilium_custom" #other options: cilium_azure|byocni
+    version                = "1.14.3"
+    kube-proxy-replacement = true
+    ebpf-hostrouting       = true
   }
 }

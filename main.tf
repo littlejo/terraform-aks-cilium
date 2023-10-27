@@ -1,5 +1,10 @@
 locals {
   network = {
+    byocni = {
+      network_plugin  = "none"
+      network_policy  = null
+      ebpf_data_plane = null
+    }
     cilium_custom = {
       network_plugin  = "none"
       network_policy  = null
@@ -15,8 +20,8 @@ locals {
   url  = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1])[0]
   port = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1])[1]
 
-  kubeproxy_replace_options = var.cilium.kube-proxy == "disabled" ? "--set kubeProxyReplacement=true --set k8sServiceHost=${local.url} --set k8sServicePort=${local.port}" : ""
-  ebpf_hostrouting_options  = var.cilium.kube-proxy == "disabled" ? var.cilium.ebpf-hostrouting == "enabled" ? "--set bpf.masquerade=true" : "" : ""
+  kubeproxy_replace_options = var.cilium.kube-proxy-replacement ? "--set kubeProxyReplacement=true --set k8sServiceHost=${local.url} --set k8sServicePort=${local.port}" : ""
+  ebpf_hostrouting_options  = var.cilium.kube-proxy-replacement && var.cilium.ebpf-hostrouting ? "--set bpf.masquerade=true" : ""
 }
 
 resource "azurerm_virtual_network" "this" {
@@ -86,7 +91,7 @@ resource "local_file" "this" {
 }
 
 resource "terraform_data" "kube_proxy_disable" {
-  count = var.cilium.type == "cilium_custom" ? var.cilium.kube-proxy == "disabled" ? 1 : 0 : 0
+  count = var.cilium.type == "cilium_custom" && var.cilium.kube-proxy-replacement ? 1 : 0
   provisioner "local-exec" {
     command = "kubectl -n kube-system patch daemonset kube-proxy -p '\"spec\": {\"template\": {\"spec\": {\"nodeSelector\": {\"non-existing\": \"true\"}}}}'"
     environment = {
