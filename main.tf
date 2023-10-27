@@ -12,8 +12,8 @@ locals {
     }
   }
 
-  url  = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config.0.host)[1])[0]
-  port = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config.0.host)[1])[1]
+  url  = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1])[0]
+  port = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1])[1]
 
   kubeproxy_replace_options = var.cilium.kube-proxy == "disabled" ? "--set kubeProxyReplacement=true --set k8sServiceHost=${local.url} --set k8sServicePort=${local.port}" : ""
   ebpf_hostrouting_options  = var.cilium.kube-proxy == "disabled" ? var.cilium.ebpf-hostrouting == "enabled" ? "--set bpf.masquerade=true" : "" : ""

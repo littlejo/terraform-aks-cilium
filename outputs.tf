@@ -5,5 +5,5 @@ output "kube_config_raw" {
 }
 
 output "kube_host" {
-  value = nonsensitive(azurerm_kubernetes_cluster.this.kube_config.0.host)
+  value = nonsensitive(azurerm_kubernetes_cluster.this.kube_config[0].host)
 }
