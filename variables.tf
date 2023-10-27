@@ -1,10 +1,10 @@
 variable "resource_group_name" {
-  description = "Resource Group Name (az group list | jq -r .[0].name)"
+  description = "Resource Group Name (az group list | jq -r '.[0].name')"
   type        = string
 }
 
 variable "location" {
-  description = "Location (az group list | jq -r .[0].location)"
+  description = "Location (az group list | jq -r '.[0].location')"
   type        = string
 }
 
@@ -47,5 +47,16 @@ variable "aks" {
       node_count = 3
       vm_size    = "Standard_DS2_v2"
     }
+  }
+}
+
+variable "cilium" {
+  description = "Feature of cilium"
+  type        = any
+  default = {
+    type             = "cilium_custom"
+    version          = "1.14.3"
+    kube-proxy       = "disabled"
+    ebpf-hostrouting = "enabled"
   }
 }
