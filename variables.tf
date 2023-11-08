@@ -37,7 +37,16 @@ variable "subnet_pod" {
 
 variable "aks" {
   description = "Feature of aks"
-  type        = any
+  type = object({
+    name       = string
+    version    = string
+    dns_prefix = string
+    default_node_pool = object({
+      name       = optional(string, "default")
+      node_count = optional(number, 3)
+      vm_size    = optional(string, "Standard_DS2_v2")
+    })
+  })
   default = {
     name       = "cilium-cluster-tf-helm"
     version    = "1.27.3"
