@@ -10,7 +10,7 @@ variable "location" {
 
 variable "vnet" {
   description = "Feature of vnet"
-  type        = any
+  type        = object({ address_space = list(string), name = string })
   default = {
     address_space = ["10.0.0.0/8"]
     name          = "cilium-tf-helm"
@@ -19,7 +19,7 @@ variable "vnet" {
 
 variable "subnet_node" {
   description = "Feature of subnet of node"
-  type        = any
+  type        = object({ address_prefixes = list(string), name = string })
   default = {
     address_prefixes = ["10.240.0.0/16"]
     name             = "nodesubnet"
@@ -28,7 +28,7 @@ variable "subnet_node" {
 
 variable "subnet_pod" {
   description = "Feature of subnet of pod"
-  type        = any
+  type        = object({ address_prefixes = list(string), name = string })
   default = {
     address_prefixes = ["10.241.0.0/16"]
     name             = "podsubnet"
