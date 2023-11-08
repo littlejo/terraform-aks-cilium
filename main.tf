@@ -17,32 +17,7 @@ locals {
     }
   }
 
-  url  = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1])[0]
-  port = split(":", split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1])[1]
-
-  helm_kubeproxy_replace_options = [
-    {
-      name  = "kubeProxyReplacement"
-      value = "true"
-    },
-    {
-      name  = "k8sServiceHost"
-      value = local.url
-    },
-    {
-      name  = "k8sServicePort"
-      value = local.port
-    },
-  ]
-  helm_ebpf_hostrouting_options = [
-    {
-      name  = "bpf.masquerade"
-      value = "true"
-    },
-  ]
-
-  kubeproxy_replace = var.cilium.kube-proxy-replacement ? local.helm_kubeproxy_replace_options : []
-  ebpf_hostrouting  = var.cilium.kube-proxy-replacement && var.cilium.ebpf-hostrouting ? local.helm_ebpf_hostrouting_options : []
+  kubeproxy_replace_host = var.cilium.kube-proxy-replacement ? split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1] : null
 }
 
 resource "azurerm_virtual_network" "this" {
@@ -81,6 +56,8 @@ resource "azurerm_subnet" "pod" {
 resource "azurerm_kubernetes_cluster" "this" {
   name               = var.aks.name
   kubernetes_version = var.aks.version
+
+  azure_policy_enabled = true
 
   dns_prefix = var.aks.dns_prefix
 
@@ -126,26 +103,13 @@ resource "terraform_data" "kube_proxy_disable" {
 }
 
 module "cilium" {
-  count  = var.cilium.type == "cilium_custom" ? 1 : 0
-  source = "github.com/terraform-helm/terraform-helm-cilium?ref=v0.3"
-  set_values = concat([
-    {
-      name  = "version"
-      value = var.cilium.version
-    },
-    {
-      name  = "azure.resourceGroup"
-      value = var.resource_group_name
-    },
-    {
-      name  = "nodeinit.enabled"
-      value = "true"
-    },
-    {
-      name  = "aksbyocni.enabled"
-      value = "true"
-    },
-  ], local.kubeproxy_replace, local.ebpf_hostrouting)
+  count                  = var.cilium.type == "cilium_custom" ? 1 : 0
+  source                 = "github.com/littlejo/terraform-helm-cilium?ref=v0.4.1"
+  ebpf_hostrouting       = var.cilium.ebpf-hostrouting
+  hubble                 = var.cilium.hubble
+  hubble_ui              = var.cilium.hubble-ui
+  azure_resource_group   = var.resource_group_name
+  kubeproxy_replace_host = local.kubeproxy_replace_host
   depends_on = [
     terraform_data.kube_proxy_disable,
   ]

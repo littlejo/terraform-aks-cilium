@@ -13,7 +13,7 @@ variable "vnet" {
   type        = any
   default = {
     address_space = ["10.0.0.0/8"]
-    name          = "cilium-tf"
+    name          = "cilium-tf-helm"
   }
 }
 
@@ -39,8 +39,8 @@ variable "aks" {
   description = "Feature of aks"
   type        = any
   default = {
-    name       = "cilium-cluster-tf"
-    version    = "1.27"
+    name       = "cilium-cluster-tf-helm"
+    version    = "1.27.3"
     dns_prefix = "cilium"
     default_node_pool = {
       name       = "default"
@@ -58,5 +58,7 @@ variable "cilium" {
     version                = "1.14.3"
     kube-proxy-replacement = true
     ebpf-hostrouting       = true
+    hubble                 = true
+    hubble-ui              = true
   }
 }
