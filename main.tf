@@ -104,7 +104,8 @@ resource "terraform_data" "kube_proxy_disable" {
 
 module "cilium" {
   count                  = var.cilium.type == "cilium_custom" ? 1 : 0
-  source                 = "github.com/littlejo/terraform-helm-cilium?ref=v0.4.1"
+  source                 = "littlejo/cilium/helm"
+  version                = "0.4.1"
   ebpf_hostrouting       = var.cilium.ebpf-hostrouting
   hubble                 = var.cilium.hubble
   hubble_ui              = var.cilium.hubble-ui
