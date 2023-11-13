@@ -106,6 +106,7 @@ module "cilium" {
   count                  = var.cilium.type == "cilium_custom" ? 1 : 0
   source                 = "littlejo/cilium/helm"
   version                = "0.4.1"
+  release_version        = var.cilium.version
   ebpf_hostrouting       = var.cilium.ebpf-hostrouting
   hubble                 = var.cilium.hubble
   hubble_ui              = var.cilium.hubble-ui
