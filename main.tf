@@ -105,12 +105,14 @@ resource "terraform_data" "kube_proxy_disable" {
 module "cilium" {
   count                  = var.cilium.type == "cilium_custom" ? 1 : 0
   source                 = "littlejo/cilium/helm"
-  version                = "0.4.1"
+  version                = "0.4.3"
+  release_version        = var.cilium.version
   ebpf_hostrouting       = var.cilium.ebpf-hostrouting
   hubble                 = var.cilium.hubble
   hubble_ui              = var.cilium.hubble-ui
   azure_resource_group   = var.resource_group_name
   kubeproxy_replace_host = local.kubeproxy_replace_host
+  gateway_api            = var.cilium.gateway-api
   depends_on = [
     terraform_data.kube_proxy_disable,
   ]

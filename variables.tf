@@ -68,6 +68,7 @@ variable "cilium" {
     ebpf-hostrouting       = optional(bool, false)
     hubble                 = optional(bool, false)
     hubble-ui              = optional(bool, false)
+    gateway-api            = optional(bool, false)
   })
   default = {
     type                   = "cilium_custom" #other options: cilium_azure|byocni
@@ -76,5 +77,6 @@ variable "cilium" {
     ebpf-hostrouting       = true
     hubble                 = true
     hubble-ui              = true
+    gateway-api            = true
   }
 }
