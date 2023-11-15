@@ -105,7 +105,7 @@ resource "terraform_data" "kube_proxy_disable" {
 module "cilium" {
   count                  = var.cilium.type == "cilium_custom" ? 1 : 0
   source                 = "littlejo/cilium/helm"
-  version                = "0.4.3"
+  version                = "0.4.6"
   release_version        = var.cilium.version
   ebpf_hostrouting       = var.cilium.ebpf-hostrouting
   hubble                 = var.cilium.hubble
@@ -113,7 +113,17 @@ module "cilium" {
   azure_resource_group   = var.resource_group_name
   kubeproxy_replace_host = local.kubeproxy_replace_host
   gateway_api            = var.cilium.gateway-api
+  upgrade_compatibility  = var.cilium.upgrade-compatibility
   depends_on = [
     terraform_data.kube_proxy_disable,
   ]
+}
+
+module "cilium_preflight" {
+  count                  = var.cilium.type == "cilium_custom" && var.cilium.preflight-version != null ? 1 : 0
+  source                 = "littlejo/cilium/helm"
+  version                = "0.4.6"
+  release_version        = var.cilium.preflight-version
+  kubeproxy_replace_host = local.kubeproxy_replace_host
+  preflight              = true
 }

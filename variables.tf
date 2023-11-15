@@ -69,6 +69,8 @@ variable "cilium" {
     hubble                 = optional(bool, false)
     hubble-ui              = optional(bool, false)
     gateway-api            = optional(bool, false)
+    preflight-version      = optional(string, null)
+    upgrade-compatibility  = optional(string, null)
   })
   default = {
     type                   = "cilium_custom" #other options: cilium_azure|byocni
