@@ -13,7 +13,7 @@ variable "vnet" {
   type        = object({ address_space = list(string), name = string })
   default = {
     address_space = ["10.0.0.0/8"]
-    name          = "cilium-tf-helm"
+    name          = "cilium-tf-provider"
   }
 }
 
@@ -48,8 +48,8 @@ variable "aks" {
     })
   })
   default = {
-    name       = "cilium-cluster-tf-helm"
-    version    = "1.27.3"
+    name       = "cilium-cluster-tf-provider"
+    version    = "1.27"
     dns_prefix = "cilium"
     default_node_pool = {
       name       = "default"
@@ -74,11 +74,11 @@ variable "cilium" {
   })
   default = {
     type                   = "cilium_custom" #other options: cilium_azure|byocni
-    version                = "1.14.3"
-    kube-proxy-replacement = true
-    ebpf-hostrouting       = true
-    hubble                 = true
-    hubble-ui              = true
-    gateway-api            = true
+    version                = "1.15.1"
+    kube-proxy-replacement = false
+    ebpf-hostrouting       = false
+    hubble                 = false
+    hubble-ui              = false
+    gateway-api            = false
   }
 }

@@ -16,8 +16,6 @@ locals {
       ebpf_data_plane = "cilium"
     }
   }
-
-  kubeproxy_replace_host = var.cilium.kube-proxy-replacement ? split("https://", azurerm_kubernetes_cluster.this.kube_config[0].host)[1] : null
 }
 
 resource "azurerm_virtual_network" "this" {
@@ -88,42 +86,13 @@ resource "local_file" "this" {
   filename = "${path.module}/kubeconfig"
 }
 
-resource "terraform_data" "kube_proxy_disable" {
-  count = var.cilium.type == "cilium_custom" && var.cilium.kube-proxy-replacement ? 1 : 0
-  provisioner "local-exec" {
-    command = "kubectl -n kube-system patch daemonset kube-proxy -p '\"spec\": {\"template\": {\"spec\": {\"nodeSelector\": {\"non-existing\": \"true\"}}}}'"
-    environment = {
-      KUBECONFIG = "./kubeconfig"
-    }
-  }
-
-  depends_on = [
-    local_file.this
+resource "cilium" "this" {
+  count = var.cilium.type == "cilium_custom" ? 1 : 0
+  set = [
+    "aksbyocni.enabled=true",
+    "nodeinit.enabled=true",
+    "azure.resourceGroup=${var.resource_group_name}"
   ]
-}
-
-module "cilium" {
-  count                  = var.cilium.type == "cilium_custom" ? 1 : 0
-  source                 = "littlejo/cilium/helm"
-  version                = "0.4.6"
-  release_version        = var.cilium.version
-  ebpf_hostrouting       = var.cilium.ebpf-hostrouting
-  hubble                 = var.cilium.hubble
-  hubble_ui              = var.cilium.hubble-ui
-  azure_resource_group   = var.resource_group_name
-  kubeproxy_replace_host = local.kubeproxy_replace_host
-  gateway_api            = var.cilium.gateway-api
-  upgrade_compatibility  = var.cilium.upgrade-compatibility
-  depends_on = [
-    terraform_data.kube_proxy_disable,
-  ]
-}
-
-module "cilium_preflight" {
-  count                  = var.cilium.type == "cilium_custom" && var.cilium.preflight-version != null ? 1 : 0
-  source                 = "littlejo/cilium/helm"
-  version                = "0.4.6"
-  release_version        = var.cilium.preflight-version
-  kubeproxy_replace_host = local.kubeproxy_replace_host
-  preflight              = true
+  version    = var.cilium.version
+  depends_on = [local_file.this]
 }
